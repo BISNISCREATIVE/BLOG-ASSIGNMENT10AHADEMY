@@ -53,21 +53,15 @@ const config: Config = {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
-        // Custom colors from Figma designs
-        gray: {
-          100: "#F3F4F6",
-          200: "#E5E7EB",
-          300: "#374151",
-        },
+        // Custom colors for your design
         lightgray: "#E5E7EB",
-        darkgray: "#6B7280",
-        dimgray: "#9CA3AF",
-        slategray: "#64748B",
         steelblue: "#1DA1F2",
-      },
-      fontFamily: {
-        inter: ["Inter", "sans-serif"],
-        outfit: ["Outfit", "sans-serif"],
+        dimgray: "#6B7280",
+        darkgray: "#374151",
+        slategray: "#64748B",
+        "gray-100": "#F3F4F6",
+        "gray-200": "#E5E7EB",
+        "gray-300": "#D1D5DB",
       },
       borderRadius: {
         lg: "var(--radius)",
