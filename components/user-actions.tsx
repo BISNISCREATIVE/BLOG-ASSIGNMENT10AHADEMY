@@ -4,9 +4,16 @@ import Link from "next/link"
 import { useAuth } from "@/contexts/auth-context"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 import { User, LogOut, Edit } from "lucide-react"
+import { useRouter } from "next/navigation"
 
 export default function UserActions() {
   const { user, logout } = useAuth()
+  const router = useRouter()
+
+  const handleLogout = () => {
+    logout()
+    router.push("/")
+  }
 
   if (user) {
     return (
@@ -40,7 +47,7 @@ export default function UserActions() {
               </Link>
             </DropdownMenuItem>
             <DropdownMenuItem
-              onClick={logout}
+              onClick={handleLogout}
               className="flex flex-row items-center justify-start py-3 px-4 gap-2 hover:bg-gray-50 cursor-pointer"
             >
               <LogOut className="w-5 relative max-h-full overflow-hidden shrink-0" />

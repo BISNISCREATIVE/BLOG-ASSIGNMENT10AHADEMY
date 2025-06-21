@@ -10,6 +10,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Edit, Settings, Trash2, Heart, MessageCircle, Plus } from "lucide-react"
 import { useAuth } from "@/contexts/auth-context"
 import Link from "next/link"
+import { EditProfileModal, ChangePasswordModal, DeleteAccountModal } from "@/components/profile-modals"
 
 interface BlogPost {
   id: string
@@ -35,11 +36,16 @@ interface UserStats {
 }
 
 export default function ProfilePage() {
-  const { user, loading: authLoading } = useAuth()
+  const { user, loading: authLoading, logout } = useAuth()
   const router = useRouter()
   const [posts, setPosts] = useState<BlogPost[]>([])
   const [stats, setStats] = useState<UserStats>({ totalPosts: 0, totalLikes: 0, totalComments: 0 })
   const [loading, setLoading] = useState(true)
+
+  const [showEditModal, setShowEditModal] = useState(false)
+  const [showPasswordModal, setShowPasswordModal] = useState(false)
+  const [showDeleteModal, setShowDeleteModal] = useState(false)
+  const [showStatsModal, setShowStatsModal] = useState<"likes" | "comments" | null>(null)
 
   useEffect(() => {
     if (!authLoading && !user) {
@@ -115,6 +121,16 @@ export default function ProfilePage() {
     }
   }
 
+  const handleEditProfile = (data: any) => {
+    // Update user data
+    console.log("Updating profile:", data)
+  }
+
+  const handleDeleteAccount = () => {
+    logout()
+    router.push("/")
+  }
+
   if (authLoading || loading) {
     return (
       <div className="min-h-screen bg-gray-50">
@@ -156,17 +172,13 @@ export default function ProfilePage() {
             </div>
 
             <div className="flex space-x-3">
-              <Button variant="outline" asChild>
-                <Link href="/profile/edit">
-                  <Edit className="h-4 w-4 mr-2" />
-                  Edit Profile
-                </Link>
+              <Button variant="outline" onClick={() => setShowEditModal(true)}>
+                <Edit className="h-4 w-4 mr-2" />
+                Edit Profile
               </Button>
-              <Button variant="outline" asChild>
-                <Link href="/profile/settings">
-                  <Settings className="h-4 w-4 mr-2" />
-                  Settings
-                </Link>
+              <Button variant="outline" onClick={() => setShowPasswordModal(true)}>
+                <Settings className="h-4 w-4 mr-2" />
+                Settings
               </Button>
             </div>
           </div>
@@ -184,7 +196,7 @@ export default function ProfilePage() {
             </CardContent>
           </Card>
 
-          <Card>
+          <Card className="cursor-pointer hover:shadow-md transition-shadow" onClick={() => setShowStatsModal("likes")}>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">Total Likes</CardTitle>
               <Heart className="h-4 w-4 text-muted-foreground" />
@@ -194,7 +206,10 @@ export default function ProfilePage() {
             </CardContent>
           </Card>
 
-          <Card>
+          <Card
+            className="cursor-pointer hover:shadow-md transition-shadow"
+            onClick={() => setShowStatsModal("comments")}
+          >
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">Total Comments</CardTitle>
               <MessageCircle className="h-4 w-4 text-muted-foreground" />
@@ -252,6 +267,20 @@ export default function ProfilePage() {
             </Button>
           </div>
         )}
+        <EditProfileModal
+          isOpen={showEditModal}
+          onClose={() => setShowEditModal(false)}
+          user={user}
+          onSave={handleEditProfile}
+        />
+
+        <ChangePasswordModal isOpen={showPasswordModal} onClose={() => setShowPasswordModal(false)} />
+
+        <DeleteAccountModal
+          isOpen={showDeleteModal}
+          onClose={() => setShowDeleteModal(false)}
+          onConfirm={handleDeleteAccount}
+        />
       </main>
     </div>
   )
